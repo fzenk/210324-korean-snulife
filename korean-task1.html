@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugins/jspsych-instructions.js"></script>
+    <script src="jspsych/plugins/jspsych-html-button-response.js"></script>
+    <script src="jspsych/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych/plugins/jspsych-survey-html-form.js"></script>
+    <script src="jspsych/plugins/jspsych-survey-text.js"></script>
+    <script src="jspsych/plugins/jspsych-fullscreen.js"></script>
+    <script src="jspsych-elicited-production-setup.js"></script>
+    <script src="jspsych-elicited-production-response.js"></script>
+    <script src="jspsych-moving-window.js"></script>
+    <script src="jspsych-acceptability-judgment.js"></script>
+    <script src="korean-language-survey-text.js"></script>
+    <script src="shuffle.js"></script>
+    <script src="trial-info.js"></script>
+    <link rel="stylesheet" href="jspsych/css/jspsych.css"></link>
+</head>
+<body></body>
+<script>
+
+    let timeline = [];
+
+    // provisionally set 'CONDITION' to 1
+    var CONDITION = 1;
+
+    // make participant identifiers; partcipants will need to correctly enter one of them to access the experiment
+    var password = 'researcher|researcher1|researcher2|researcher3|researcher4|researcher5|researcher6|'+
+    '602v7c0j1|p5td3ca71|bydd1j791|pe0g7wld1|50hu41331|jz20dgv61|y6c1a91s1|tm6jklun1|4qpw84ur1|08ljaslp1|nguhwn2k1|lt4qhrgn1|pt8z1mss1|0j82y7zj1|wal149ly1|7vb7ldek1|72fwjhn61|aauatsus1|tz9yy2sn1|ot7wd2ye1|905r90qk1|zwksazcp1|w6h9tbbm1|bc93geuy1|t86mkrzt1|gpvyjhns1|ovtoguuv1|cg9ydkyf1|2mtdba5r1|jgnfao5m1|q3vfl3be1|846k61l41|t1fb17kv1|5c2zqo691|jnu8t9ts1|yc5kz6jy1|tps0u2l61|yd67vd3w1|k7gvtkb21|7dk8712m1|pgvun1bw1|5ksdppnn1|8l25d3k81|kd6e1v711|ns2b2hgf1|3mxyqjck1|xxzwes371|sbm1ygqm1|30wfet1z1|yuptq0491|'+
+    '60jrsq6p2|nkrev6el2|d91hfr692|bboqbfmg2|5vwgh2qk2|k18p9cja2|90haz13c2|9ojcp1ze2|9p7ohxou2|caybglz52|nt3hgbhx2|wy5g5lvq2|lq9nquvs2|trhhq9rt2|kmy4fabq2|yk8a98a62|5unvxtv62|rcoacpe62|aysg40ag2|j1gom6ru2|033jx6gn2|ftdhklax2|08198dqq2|jrqht6ev2|rtr07ae92|lzq4w8hg2|z8vbe6as2|d5rg8m1z2|3ohcv3er2|gpqge9ny2|r8b35mpm2|axh6nmkc2|x9f2ch4u2|7vdldwpb2|xq7a0o7o2|81keuxh42|l2dw4uda2|fcc6aza12|sx4d82f42|vs153x942|nymvtn3w2|f1v60jzf2|eyk0puvx2|zz1hm9y22|qcs35pfv2|rx2b9afg2|wjhhlaqv2|05nnm4922|cr4sccl12|4fa3ylkl2|'+
+    'm51bwc323|x261csyd3|pg8eo78s3|ugdyx0q13|o7dtghn03|aav3okdy3|0urhmf823|t4jg16l73|oop6qfd13|ze0wt2673|50n2vbpo3|zc4nbxo93|vj6aleg73|5te2jrd23|rznznv5o3|vdpfscky3|4yzsbawl3|9c7o4d9c3|e1enva893|16av2p7f3|yr3ncm5g3|y6yd38yy3|qo9r1tmh3|8b9nd01l3|5e072t0x3|r8uf0n6s3|4sppvwx63|fnpvx3yj3|1fdht9wb3|7ua9cscw3|qwuvzf593|e1gu4pqh3|ozpzsko93|953hrw0o3|z314txre3|wpbpl64b3|hf0e0hjo3|lbjad95n3|ovpuhfwx3|0j4batzr3|u58hun9d3|orkqxb4a3|kmvqmuwb3|c66d0gaf3|r4j5hcff3|a8bbbu0a3|w1ptdgl73|ugl6yw8b3|72rg7zv73|m2odhzzl3|'+
+    'geyp1uwf4|820o8jew4|0ko17tly4|jr4ndfbc4|r7bclt044|sg7fmuxh4|uf4m4p9b4|61ngbqlw4|6z9m4cky4|2psa1x414|y75lvubu4|65u9ugrr4|2hygmsrn4|tv6z8yel4|a3eamofm4|xq4d5l3n4|wzqsfr8c4|02euuhrs4|ut8o1or24|we8h7bew4|vam5xrmw4|1wp86n4g4|xbgohmak4|d3wbclar4|glj2j4ew4|838psb4j4|ggsbrf384|n7dkyzq64|39xsnuhv4|zzkdx5q74|yya2k8s34|b6ljdd9f4|ak8jqzkq4|rbw6qsy74|p8y4m3ah4|9skg6wtc4|sm2zwplg4|8hoekbhb4|cvljpt054|579ghlyv4|rulxh1ut4|8g4wl9ko4|1oo7nr404|e6574qyn4|67fge42o4|k9umc0jr4|b3791fxq4|qqjgusna4|4m9yporw4|1lvv6ogc4|'+
+    'osf4sw075|sznc50575|s160qtsw5|w2d24hnz5|vx1rkgyp5|7ub8cfxx5|xb8nn1vh5|75adkaly5|0o2pwwyq5|pdyq0f3p5|4h5vxeh25|nwu5okns5|3uwex8sl5|63k5fftw5|0lp9cw7l5|qspnvlqy5|yp71tr2u5|pvvf0ou35|l4qvqggl5|o53h434j5|kaxqjpm35|6y8k67bn5|kzckpokw5|6u7y69yo5|0p23mntd5|gnb3l73v5|e208u7j75|2npjjvmh5|g2a9grh25|zu2yavjm5|t08h424q5|l9a4tybn5|1syrgkqm5|ll34mh8m5|ae6y2akr5|vrnd2y8n5|tebwrb1h5|4a8xx9qe5|gh8pd3p85|7ou2y2w15|z2298szu5|uo3x8xuh5|scj3ycpv5|et539dn65|aljq73yc5|1bcyy3hm5|sla5726j5|yqkvmg3n5|zjx8nddl5|lxtpkj3l5|'+
+    '834f8tdv6|ssfzmwvk6|48wu3c1m6|ut7wqvo66|nc0trftk6|txzbfxwc6|spjkw8bc6|ntybzo3p6|j66z3c456|yql0k20y6|ee96rzgu6|9szazvv16|refnfteu6|l18xzgsd6|26k0wnfr6|ca3fxaqt6|mwh477kp6|3jzkte1z6|6ckw1kov6|hxx3nfa06|8bdtlxms6|7ubnc7pq6|k335eaxd6|n6n0ksxo6|1dzfue8a6|gsve87un6|th4urgun6|2y4la7436|dw4vety26|ph14ptp16|8j240pwy6|672zu0wk6|p8bjok5u6|m0ud0ze66|autao9z56|flwqjlex6|7p6ln3o66|olhr2ma56|3n7xkgf96|rb4l84bv6|gufcly1e6|szjga5yt6|aq9eokda6|f6fg2aok6|gafpnrdf6|stdu8fuc6|1chgjjox6|t2q7n8jq6|jkw2euyz6|sksmmtpn6|';
+
+    // define formatting for inactive button used in instructions
+    var inactive_btn = '.inactive-btn {display: inline-block; padding: 6px 12px; margin: 0px; font-size: 14px; font-weight: 400; font-family: "Open Sans", "Arial", sans-serif; cursor: pointer; line-height: 1.4; text-align: center; white-space: nowrap; vertical-align: middle; background-image: none; border: 1px solid transparent; border-radius: 4px; color: #333; background-color: #fff; border-color: #ccc; pointer-events: none;}';
+
+    // define running order for stimuli
+    var plist1 = rshuffle(pcrit1, pfill);
+    var plist2 = rshuffle(pcrit1, pfill);
+    var plist3 = rshuffle(pcrit2, pfill);
+    var plist4 = rshuffle(pcrit2, pfill);
+    var plist5 = rshuffle(pcrit3, pfill);
+    var plist6 = rshuffle(pcrit3, pfill);
+
+    // overview page
+
+    var overview = {
+        type: 'instructions',
+        data: {trial_name: 'overview'},
+        button_label_previous: '이전',
+        button_label_next: '다음',
+        pages: [
+            '<style>fieldset {border:1px solid #999;box-shadow:2px 2px 5px #999;} legend {background:#fff;text-align:left;font-size:110%;} p {text-align:left;} ul {text-align:left}</style>'+ 
+            '<img src="overview.jpg" height="150" title="image credit: pch.vector / Freepik (www.freepik.com)">'+
+            '<h3 style="text-align:center">영어와 한국어에 관한 언어 실험</h3>'+
+            '<p>안녕하세요. 실험에 참가하여 주셔서 감사합니다. 본 실험에서는 언어적 배경에 대한 설문지와 문장 읽기와 문제에 답하기 등을 포함한 언어와 관련된 과제를 수행할 것입니다. </p>'+
+            '<fieldset><legend><b>실험 설명</b></legend>'+
+            '<p>본 실험은 다섯 개의 과제로 이루어져 있습니다. 실험 전체를 한 번에 다 끝낼 수도 있고, 각 과제 하나씩 나눠서 할 수도 있습니다. 과제 전체는 시작 후 7일 이내에 완료하여 주시기 바랍니다. 하나의 과제가 끝나면 그 다음 과제의 링크를 받으실 것입니다. 실험 전체는 70–90분 정도 소요될 것이라 예상됩니다. 실험 전체를 완료한 후, 실험 완료 설문조사를 제출하시면 연구자에게 자동으로 알림이 보내질 것입니다.</p>'+
+            '</fieldset><br>'+
+            '<fieldset><legend><b>실험 참가 자격 요건</b></legend>'+
+             '<ul>'+
+            '<li>만 18세 이상</li>'+
+            '<li>한국어 원어민</li>'+
+            '<li>영어를 만 8세 이후에 처음 공부하기 시작한 경우</li>'+
+            '</ul>'+
+            '</fieldset><br>'+
+            '<fieldset><legend><b>필요 기기</b></legend>'+
+            '<p>본 실험은 크롬이나 파이어폭스 브라우저로 노트북이나 컴퓨터로만 접속하실 수 있습니다 (스마트폰이나 태블릿 사용 불가). 한 과제는 짧은 녹음을 답변으로 제출해야 하기 때문에 실험 시작 전 컴퓨터로 녹음이 가능한 지 확인하여 주시기 바랍니다. 대부분의 컴퓨터는 마이크가 내장되어 있어 녹음이 가능할 것으로 예상됩니다.</p>'+
+            '</fieldset><br>'+
+            '<fieldset><legend><b>방해 요소 제거</b></legend>'+
+            '<p>본 실험은 논문 연구에 매우 중요한 자료를 수집하는 것을 목적으로 합니다. 그러므로 과제를 수행하실 때 최대한 집중하실 수 있도록 방해 요소가 없는 조용한 장소에서 참여하여 주시기 바랍니다. 실험 외의 다른 브라우저나 프로그램은 닫아 주시기 바랍니다. 더하여, 실험 중 검색이나 사전 등 다른 자료를 사용하는 것을 자제하여 주시기 바랍니다.</p>'+
+            '</fieldset><br>'+
+            '<fieldset><legend><b>실험 참가 사례금</b></legend>'+
+            '<p>실험에 참가하시는 분들께 15,000원의 사례금을 드립니다. 사례금은 한국의 계좌로 이체될 예정이며, 실험 마지막 부분에 (1) 은행명, (2) 예금주 명, (3) 계좌번호를 작성하여 주시면 해당 계좌로 송금될 것입니다. 더하여 송금 관련하여 연구자가 연락을 드릴 수 있도록 이메일 주소도 남겨주시면 감사하겠습니다. 사례금은 실험 완료 후 72시간 이내에 지급됩니다. 사례금 관련하여 질문사항이 있으시면 저에게 이메일 fzenker@hawaii.edu로 연락주시기 바랍니다.</p></fieldset><br>'
+        ],
+        show_clickable_nav: true,
+        on_load: function() {
+            document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+        }
+    };
+    timeline.push(overview);
+
+    // participant identifier
+
+    var identifier = {
+        type: 'survey-html-form',
+        data: {trial_name: 'identifier'},
+        button_label: '계속',
+        html: '<img src="https://image.freepik.com/free-vector/access-control-system-abstract-concept_335657-3180.jpg" height="150" title="image credit: pch.vector / Freepik (www.freepik.com)"><br>'+
+            '<span style="font-size:125%;"><b>참가ID</b></span><p>연구자에게 배정받은 참가ID를 입력하여 주십시오</p><p><input name="digits" type="text" pattern="'+password+'" required></p>',
+        on_load: function() {
+            document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+        },
+        on_finish: function(data){
+            var dat = JSON.parse(jsPsych.data.get().last(1).select('responses').values);
+            var get_digits = dat["digits"];
+            console.log('identifier: ', get_digits);
+            jsPsych.data.addProperties({participant: get_digits});
+            var num = get_digits.slice(-1); // get last character of id
+            if (num == 2) { // set running list based on last character of id
+                CONDITION = 2
+            } else if (num == 3) {
+                CONDITION = 3
+            } else if (num == 4) {
+                CONDITION = 4
+            } else if (num == 5) {
+                CONDITION = 5
+            } else if (num == 6) {
+                CONDITION = 6
+            } else if (num == 'r') {
+                CONDITION = 0
+            }
+            jsPsych.data.addProperties({running_list: CONDITION}); // add running list to data
+            console.log('last character: ', num);
+            console.log('running list: ', CONDITION);
+        }
+    };
+    timeline.push(identifier);
+
+    // language survey
+
+    var language_survey = {
+        type: 'survey-html-form',
+        data: {trial_name: 'language_survey'},
+        button_label: '계속',
+        html: korean_language_survey_text,
+        on_finish: function(data){
+            var dat = JSON.parse(jsPsych.data.get().last(1).select('responses').values);
+            var qualified = true;
+            var get_age = dat['age'];
+            //console.log(get_age);
+            var get_native = dat['korean_proficiency'];
+            //console.log(get_native);
+            var get_aoa = dat['english_aoa'];
+            //console.log(get_aoa);
+            if (get_age < 18){
+                qualified = false
+            } else if (get_native != 'native'){
+                qualified = false
+            } else if (get_aoa < 8){
+                qualified = false
+            }
+            data.eligibility = qualified;
+            console.log('eligibility: ', data.eligibility);
+            console.log('running list: ', CONDITION);
+        }
+    };
+
+    var language_survey_feedback = {
+        type: 'html-keyboard-response',
+        stimulus: function(){
+            var feedback_text = '<style>p {text-align:left;} li {margin-bottom:10px} ul {text-align:left}</style>'+
+            '<img src="https://image.freepik.com/free-vector/tiny-people-examining-operating-system-error-warning-web-page-isolated-flat-illustration_74855-11104.jpg" height="150" title="image credit: pch.vector / Freepik (www.freepik.com)"><br>'+
+            '<h3 style="text-align:center">실험 조건 부적합 안내</h3>'+
+            '<p>작성하여 주신 답변에 따르면 본 실험에 참가할 수 없습니다. 실험은 아래의 조건에 부합하는 사람만을 대상으로 하고 있습니다:</p>'+
+            '<ul>'+
+            '<li>만 18세 이상</li>'+
+            '<li>한국어 원어민</li>'+
+            '<li>영어를 만 8세 이후에 처음 공부하기 시작한 경우</li>'+
+            '</ul>'+
+            '<p>만약 위의 조건에 부합한다고 생각되신다면 연구자에게 fzenker@hawaii.edu로 메일을 보내주시기 바랍니다.</p>';
+            var qualified = jsPsych.data.getLastTrialData().values()[0].eligibility;
+            //console.log('eligibility: ',qualified)
+            if(qualified == true){
+                feedback_text = ' '
+            }
+            return feedback_text;
+        },
+        choices: jsPsych.NO_KEYS,
+        trial_duration: function(){
+            var duration = null;
+            var qualified = jsPsych.data.getLastTrialData().values()[0].eligibility;
+            if(qualified == true){
+                duration = 1
+            }
+            return duration;
+        }
+    };
+
+    var language_survey_section = {
+        timeline: [language_survey, language_survey_feedback],
+        randomize_order: false,
+        on_load: function() {
+            document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+        }
+    };
+    timeline.push(language_survey_section);
+
+    // consent form
+
+    var consent = {
+        type: 'survey-html-form',
+        data: {trial_name: 'consent'},
+        button_label: '계속',
+        html: '<style>p {text-align:left;} .section {padding:.5em;} table {border-collapse:collapse; margin-left:auto; margin-right:auto;} .row {border:3px solid #c6c6c6;box-shadow:2px 2px 5px #999; padding:.5em;} td {text-align:left;} </style>'+
+            '<img src="https://image.freepik.com/free-vector/man-signing-contract-with-big-pen_74855-10909.jpg" height="150" title="image credit: pch.vector / Freepik (www.freepik.com)"><br>'+
+            '<span style="font-size:125%; font-weight:bold">사전동의</span>'+
+            '<p>실험에 참여하기 전 참가자로서의 권리를 알려드립니다. 아래의 링크를 클릭하시면 사전 동의서의 전문을 보실 수 있습니다.</p>'+
+            '<a href="consent-form.pdf" target="_blank">사전동의서</a><br><br>'+
+            '<table>'+
+            '<tr class="row"><td style="background-color:#c6c6c6;"><input type="checkbox" name="agreement1" value="agree" required></td>'+
+            '<td><div class="section">'+
+            '<p>실험 참가 동의서의 내용을 읽고 이해하였으며 실험에 참여하는 것에 동의합니다.</p>'+
+            '</div></td></tr>'+
+            '<tr class="spacer" height="20"><td></td></tr>'+
+            '<tr class="row"><td style="background-color:#c6c6c6;"><input type="checkbox" name="agreement2" value="agree" required></td>'+
+            '<td><div class="section">'+
+            '<p>실험에 대한 설명을 모두 읽었으며 각 질문에 최선을 다해 답변할 것에 동의합니다.</p>'+
+            '</div></td></tr>'+
+            '</table><br>',
+        on_load: function() {
+        document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+        }
+    };
+    timeline.push(consent);
+
+    // elicited production task
+
+    // By default, the audio will be saved as a JSON/CSV-friendly base64 string and will need to be converted back to an audio file offline. This can be done using existing functions in R (base64enc package) or Python (base64 library). You can also test the conversion using an online base64-to-audio converter like this one: https://base64.guru/converter/decode/audio. The default postprocessing function can be overwritten by passing a custom function to the 'postprocessing' parameter. This provides the option to save the data as an audio file rather than a string. See the plugin documentation for more details. 
+
+    var ept_instructions = {
+        type: 'survey-html-form',
+        data: {trial_name: 'ept_instructions'},
+        button_label: '계속',
+        html: '<style>p {text-align:left;} .section {padding:.5em;} table {border-collapse: collapse;} .row {border:3px solid #c6c6c6;box-shadow:2px 2px 5px #999; padding:.5em;} td {text-align:left;}'+inactive_btn+' .center {display: flex; justify-content: center; align-items: center;}</style>'+ 
+            '<img src="https://image.freepik.com/free-vector/radio-host-speaking-microphone-laptop-air-presenter-blogger-cartoon-illustration_74855-14500.jpg" height="150" title="image credit: pch.vector / Freepik (www.freepik.com)"><br>'+
+            '<span style="font-size:125%; font-weight:bold;">첫번째 과제: 영어 문장 녹음</span>'+
+            '<p style="text-align:center;">실험에 대한 설명을 모두 읽고 이해하신다면 각 설명 앞에 위치한 박스를 클릭하여 주시기 바랍니다.</p>'+
+            '<table><tr class="row"><td style="background-color:#c6c6c6;"><input type="checkbox" name="instructions1" value="agree" required></td>'+
+            '<td><div class="section">'+
+            '<p>본 과제에서는 두 명의 사람과 그들을 묘사하는 문장이 주어질 것입니다. 그 문장을 읽은 뒤, 둘 중 한 명에 대한 질문을 주어지고 그에 대한 답변을 녹음하게 됩니다.</p>'+
+            '</div></td></tr>'+
+            '<tr class="spacer" height="20"><td></td></tr>'+
+            '<tr class="row"><td style="background-color:#c6c6c6;"><input type="checkbox" name="instructions2" value="agree" required></td>'+
+            '<td><div class="section">'+
+            '<p>먼저, 아래와 같이 두 명의 사람과 그들을 묘사하는 문장이 주어질 것입니다.</p>'+
+            '<div style="width:500px; margin:auto; border:2px; border-style:ridge; padding:.5em;"><table style="margin-left:auto; margin-right:auto;"><tr><td><img src="boy1.png" style="width:100px;"></img></td><td>This boy won the race.</td></tr><tr><td><img src="boy2.png" style="width:100px;"></img></td><td>This boy lost the race.</td></tr></table><br><div class="center"><button class="inactive-btn">계속</button></div></div>'+
+            '<p>문장을 잘 읽고 다음 페이지로 이동하여 주십시오.</p>'+
+            '</div></td></tr>'+
+            '<tr class="spacer" height="20"><td></td></tr>'+
+            '<tr class="row"><td style="background-color:#c6c6c6;"><input type="checkbox" name="instructions3" value="agree" required></td>'+
+            '<td><div class="section">'+
+            '다음, 하나의 문장이 질문으로 교체될 것입니다. 그러면 그 질문에 최대한 명확하고 직접적으로 답변하여 주시기 바랍니다.</p>'+
+            '<div style="width:500px; margin:auto; border:2px; border-style:ridge; padding:.5em"><table style="margin-left:auto; margin-right:auto;"><tr><td><img src="boy1.png" style="width:100px;"></img></td><td><b><u>Which boy is this?</b></u></td></tr><tr><td><img src="boy2.png" style="width:100px;"></img></td><td>This boy lost the race.</td></tr></table><br><div class="center"><span style="color:red;"><b>Recording...</b></span></div></div>'+
+            '<p>화면 하단의 \"Recording...\" 이라는 메세지는 목소리가 녹음되고 있다는 것을 알려드립니다. 녹음이 시작되면 <b>5초</b> 동안 답변을 녹음 하실 수 있습니다.</p>'+
+            '</div></td></tr>'+
+            '<tr class="spacer" height="20"><td></td></tr>'+
+            '<tr class="row"><td style="background-color:#c6c6c6;"><input type="checkbox" name="instructions4" value="agree" required></td>'+
+            '<td><div class="section">'+
+            '<p><span style="background-color:lightgreen">\"the boy who won the race\"</span> 또는 <span style="background-color:lightgreen">\"the one who won the race\"</span> 라는 답변 모두 좋은 답변 입니다.</p>'+
+            '<p><span style="background-color:lightpink">\"This boy won the race\"</span> 라는 답변은 주어진 문장을 단순히 반복하고 실제 질문에 대한 답변이 아니기 때문에 틀린 답변입니다.</p>'+
+            '</div></td></tr>'+
+            '<tr class="spacer" height="20"><td></td></tr>'+
+            '<tr class="row"><td style="background-color:#c6c6c6;"><input type="checkbox" name="instructions5" value="agree" required></td>'+
+            '<td><div class="section">'+
+            '<p>녹음이 끝난 뒤, 답변을 들어볼 수 있는 기회가 있으며, 필요하다면 다시 녹음하실 수 있습니다.</p>'+
+            '<div style="width:500px; margin:auto; border:2px; border-style:ridge; padding:.5em"><table style="margin-left:auto; margin-right:auto;"><tr><td><img src="boy1.png" style="width:100px;"></img></td><td><b><u>Which boy is this?</b></u></td></tr><tr><td><img src="boy2.png" style="width:100px;"></img></td><td>This boy lost the race.</td></tr></table><br><div class="center"><i>재생 버튼을 누르면 답변을 들을 수 있습니다</i></div><br><div class="center"><img src="recorder.png" style="width:300px;"></img></div><br><div class="center"><button class="inactive-btn">녹음 저장</button>&nbsp;&nbsp;<button class="inactive-btn">다시 녹음</button></div></div>'+
+            '<p>과제 초반에 답변들이 제대로 녹음되어 저장되고 있는지 확인차 들어주시면 감사하겠습니다.</p>'+
+            '</div></td></tr>'+
+            '</table>'+
+            '<p style="text-align:center;">이 과제는 약 15분 정도 소요될 예정이며, 과제 수행 시 최대한 집중하여 주시기 바랍니다.</p><br>',
+    };
+
+    var ept_prac_alert = {
+        type: 'html-button-response',
+        stimulus: '<p>지금은 과제 수행 방식을 하기 위해 몇 개의 문제를 연습할 것입니다.</p>'+
+        '<p>여기서는 실제 답변을 녹음하는 것은 아니고 옳은 답변을 선택하는 연습입니다.</p>',
+        choices: ['계속'],
+    };
+
+    var ept_prac_setup = {
+        type: 'html-button-response',
+        stimulus: jsPsych.timelineVariable('stimulus1'),
+        choices: ['계속'],
+        data: {
+            trial_name: 'ept_practice',
+            trial_part: 'ept_prac_setup',
+        }
+    };
+
+    var ept_prac_response = {
+        type: 'html-button-response',
+        data: {
+            item: jsPsych.timelineVariable('item'),
+            correct: jsPsych.timelineVariable('correct'),
+            trial_name: 'ept_practice',
+            trial_part:'ept_prac_question',
+        },
+        stimulus: jsPsych.timelineVariable('stimulus2'),
+        choices: jsPsych.timelineVariable('choices'),
+        on_finish: function(data) {
+            var acc = false;
+            if (data.correct == data.button_pressed) {
+                acc = true;
+            }
+            data.accuracy = acc;
+            console.log('data.accuracy: ', data.accuracy);
+        }
+    };
+  
+    var ept_prac_feedback = {
+        type: 'html-keyboard-response',
+        stimulus: '<span style="color:red;font-size:30px;">오답입니다. 더욱 주의깊게 읽어주시기 바랍니다.</span>',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 3000,
+    };
+
+    var ept_prac_feedback_conditional = {
+        timeline: [ept_prac_feedback],
+        conditional_function: function() {
+            var last_resp_acc = jsPsych.data.getLastTrialData().values()[0].accuracy;
+            if (last_resp_acc == false) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ept_prac_procedure = {
+        timeline: [ept_prac_setup, ept_prac_response, ept_prac_feedback_conditional],
+        timeline_variables: ept_prac_list,
+        randomize_order: true,
+    };
+
+    var repeat_instructions_message = {
+        type: 'html-button-response',
+        stimulus: '<p>오답이 많아 다음 단계로 넘어갈 수 없습니다.</p>'+
+        '<p>과제 설명을 다시 읽고 연습 문제에 다시 답변하여 주시기 바랍니다.</p>',
+        choices: ['계속'],
+    };
+
+    var repeat_instructions_conditional = {
+        timeline: [repeat_instructions_message],
+        conditional_function: function() {
+            var last_prac_trials = jsPsych.data.get().filter({trial_part:'ept_prac_question'}).last(ept_prac_list.length);
+            var n_correct = last_prac_trials.filter({accuracy: true}).count();
+            var prop_corr = n_correct/ept_prac_list.length;
+            if (prop_corr < 1) {
+                repeat_prac = true;
+                return true;
+            } else {
+                repeat_prac = false;
+                return false;
+            }
+        }
+    };
+
+    var instructions_prac_loop = {
+        timeline: [ept_instructions, ept_prac_alert, ept_prac_procedure, repeat_instructions_conditional],
+        loop_function: function() {
+            if (repeat_prac == true) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        on_load: function() {
+            document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+        }
+    };
+    timeline.push(instructions_prac_loop);
+
+    var start_task = {
+        type: 'fullscreen',
+        fullscreen_mode: true,
+        message: '<p>수고하셨습니다. 이제 실제 과제로 넘어갈 것입니다.</p>'+
+        '<p>실제 과제에서는 질문에 대한 답변을 녹음하게 될 것입니다. ‘계속’ 버튼을 눌러 시작하여 주십시오.</p>',
+        button_label: '계속',
+        on_finish: function() {
+        document.getElementById("jspsych-progressbar-container").style.visibility = "visible";
+        }
+    };
+    timeline.push(start_task);
+
+    var count = 0; // number of trials completed, for updated progress bar
+    var n_trials = 30; // number of trials in task, for updating progress bar
+
+    var ept_trial_setup = {
+        type: 'elicited-production-setup',
+        text1: jsPsych.timelineVariable('setup1'),
+        text2: jsPsych.timelineVariable('setup2'),
+        stimulus1: jsPsych.timelineVariable('image1'),
+        stimulus2: jsPsych.timelineVariable('image2'),
+        choices: ['계속'],
+        data: {
+            trial_name: 'ept_task',
+            trial_part: 'ept_setup',
+        }
+    };
+
+    var ept_trial_response = {
+        type: 'elicited-production-response',
+        text1: jsPsych.timelineVariable('response1'),
+        text2: jsPsych.timelineVariable('response2'),
+        stimulus1: jsPsych.timelineVariable('image1'),
+        stimulus2: jsPsych.timelineVariable('image2'),
+        prompt: '<i>재생 버튼을 누르면 답변을 들을 수 있습니다</i>',
+        button1: '녹음 저장',
+        button2: '다시 녹음',
+        data: {
+            item: jsPsych.timelineVariable('item'),
+            cond: jsPsych.timelineVariable('cond'),
+            stimulus: jsPsych.timelineVariable('stimulus'),
+            target: jsPsych.timelineVariable('target'),
+            task: 'english-elicited-production-task',
+            trial_name: 'ept_task',
+            trial_part: 'ept_response',
+        },
+        on_finish: function(data) {
+            count++;
+            var progress = count/n_trials;
+            jsPsych.setProgressBar(progress);
+        }
+    };
+
+    var ept_variables_list1 = {
+        timeline: [ept_trial_setup, ept_trial_response],
+        timeline_variables: plist1,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 1 || CONDITION == 2) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ept_variables_list2 = {
+        timeline: [ept_trial_setup, ept_trial_response],
+        timeline_variables: plist2,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 3 || CONDITION == 4) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ept_variables_list3 = {
+        timeline: [ept_trial_setup, ept_trial_response],
+        timeline_variables: plist3,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 5 || CONDITION == 6) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ept_variables_list0 = {
+        timeline: [ept_trial_setup, ept_trial_response],
+        timeline_variables: plist0,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ept_main_procedure = {
+        timeline: [ept_variables_list1, ept_variables_list2, ept_variables_list3, ept_variables_list0]
+    };
+    timeline.push(ept_main_procedure);
+
+    // blank trial that ends the experiment and takes the participant to the end message
+
+    var end_task = {
+    type: 'fullscreen',
+        fullscreen_mode: false,
+        on_load: function() {
+            document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+        },
+        on_finish: function(){
+            jsPsych.endExperiment(end_message);
+        }
+    };
+    timeline.push(end_task);
+
+    // end message
+
+    var end_message = 
+        '<img src="https://image.freepik.com/free-vector/men-success-laptop-relieve-work-from-home-computer-great_10045-646.jpg" height="150" title="image credit: syarifahbrit / Freepik (www.freepik.com)"><br>'+
+        '<span style="font-size:125%; font-weight:bold;">수고하셨습니다!</span>'+
+        '<p>실험의 다섯 과제 중 첫번째 과제를 완료하였습니다. 아래 링크를 눌러 다음 과제로 이동하여 주십시오.</p>'+
+        '<p style="text-align:center;"><a href="https://qs4howrfbu.cognition.run">https://qs4howrfbu.cognition.run</a></p>' +
+        '<p>다음 과제를 바로 시작하시거나 링크를 저장하여 나중에 하실 수 있으며, 본 실험은 7일 이내에 완료하여 주시기 바랍니다.</p>'
+
+    // initiate experiment
+
+    jsPsych.init({
+        timeline: timeline,
+        show_preload_progress_bar: true,
+        show_progress_bar: true,
+        message_progress_bar: '진행 상황',
+        auto_update_progress_bar: false,
+        //on_finish: function(){jsPsych.data.displayData();}
+    });
+
+</script>
+</html>

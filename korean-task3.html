@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugins/jspsych-instructions.js"></script>
+    <script src="jspsych/plugins/jspsych-html-button-response.js"></script>
+    <script src="jspsych/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych/plugins/jspsych-survey-html-form.js"></script>
+    <script src="jspsych/plugins/jspsych-survey-text.js"></script>
+    <script src="jspsych/plugins/jspsych-fullscreen.js"></script>
+    <script src="jspsych-elicited-production-setup.js"></script>
+    <script src="jspsych-elicited-production-response.js"></script>
+    <script src="jspsych-moving-window.js"></script>
+    <script src="jspsych-acceptability-judgment.js"></script>
+    <script src="language-survey-text.js"></script>
+    <script src="shuffle.js"></script>
+    <script src="trial-info.js"></script>
+    <link rel="stylesheet" href="jspsych/css/jspsych.css"></link>
+</head>
+<body></body>
+<script>
+
+    let timeline = [];
+
+    // provisionally set 'CONDITION' to 1
+    var CONDITION = 1;
+
+    // make participant identifiers; partcipants will need to correctly enter one of them to access the experiment
+    var password = 'researcher|researcher1|researcher2|researcher3|researcher4|researcher5|researcher6|'+
+    '602v7c0j1|p5td3ca71|bydd1j791|pe0g7wld1|50hu41331|jz20dgv61|y6c1a91s1|tm6jklun1|4qpw84ur1|08ljaslp1|nguhwn2k1|lt4qhrgn1|pt8z1mss1|0j82y7zj1|wal149ly1|7vb7ldek1|72fwjhn61|aauatsus1|tz9yy2sn1|ot7wd2ye1|905r90qk1|zwksazcp1|w6h9tbbm1|bc93geuy1|t86mkrzt1|gpvyjhns1|ovtoguuv1|cg9ydkyf1|2mtdba5r1|jgnfao5m1|q3vfl3be1|846k61l41|t1fb17kv1|5c2zqo691|jnu8t9ts1|yc5kz6jy1|tps0u2l61|yd67vd3w1|k7gvtkb21|7dk8712m1|pgvun1bw1|5ksdppnn1|8l25d3k81|kd6e1v711|ns2b2hgf1|3mxyqjck1|xxzwes371|sbm1ygqm1|30wfet1z1|yuptq0491|'+
+    '60jrsq6p2|nkrev6el2|d91hfr692|bboqbfmg2|5vwgh2qk2|k18p9cja2|90haz13c2|9ojcp1ze2|9p7ohxou2|caybglz52|nt3hgbhx2|wy5g5lvq2|lq9nquvs2|trhhq9rt2|kmy4fabq2|yk8a98a62|5unvxtv62|rcoacpe62|aysg40ag2|j1gom6ru2|033jx6gn2|ftdhklax2|08198dqq2|jrqht6ev2|rtr07ae92|lzq4w8hg2|z8vbe6as2|d5rg8m1z2|3ohcv3er2|gpqge9ny2|r8b35mpm2|axh6nmkc2|x9f2ch4u2|7vdldwpb2|xq7a0o7o2|81keuxh42|l2dw4uda2|fcc6aza12|sx4d82f42|vs153x942|nymvtn3w2|f1v60jzf2|eyk0puvx2|zz1hm9y22|qcs35pfv2|rx2b9afg2|wjhhlaqv2|05nnm4922|cr4sccl12|4fa3ylkl2|'+
+    'm51bwc323|x261csyd3|pg8eo78s3|ugdyx0q13|o7dtghn03|aav3okdy3|0urhmf823|t4jg16l73|oop6qfd13|ze0wt2673|50n2vbpo3|zc4nbxo93|vj6aleg73|5te2jrd23|rznznv5o3|vdpfscky3|4yzsbawl3|9c7o4d9c3|e1enva893|16av2p7f3|yr3ncm5g3|y6yd38yy3|qo9r1tmh3|8b9nd01l3|5e072t0x3|r8uf0n6s3|4sppvwx63|fnpvx3yj3|1fdht9wb3|7ua9cscw3|qwuvzf593|e1gu4pqh3|ozpzsko93|953hrw0o3|z314txre3|wpbpl64b3|hf0e0hjo3|lbjad95n3|ovpuhfwx3|0j4batzr3|u58hun9d3|orkqxb4a3|kmvqmuwb3|c66d0gaf3|r4j5hcff3|a8bbbu0a3|w1ptdgl73|ugl6yw8b3|72rg7zv73|m2odhzzl3|'+
+    'geyp1uwf4|820o8jew4|0ko17tly4|jr4ndfbc4|r7bclt044|sg7fmuxh4|uf4m4p9b4|61ngbqlw4|6z9m4cky4|2psa1x414|y75lvubu4|65u9ugrr4|2hygmsrn4|tv6z8yel4|a3eamofm4|xq4d5l3n4|wzqsfr8c4|02euuhrs4|ut8o1or24|we8h7bew4|vam5xrmw4|1wp86n4g4|xbgohmak4|d3wbclar4|glj2j4ew4|838psb4j4|ggsbrf384|n7dkyzq64|39xsnuhv4|zzkdx5q74|yya2k8s34|b6ljdd9f4|ak8jqzkq4|rbw6qsy74|p8y4m3ah4|9skg6wtc4|sm2zwplg4|8hoekbhb4|cvljpt054|579ghlyv4|rulxh1ut4|8g4wl9ko4|1oo7nr404|e6574qyn4|67fge42o4|k9umc0jr4|b3791fxq4|qqjgusna4|4m9yporw4|1lvv6ogc4|'+
+    'osf4sw075|sznc50575|s160qtsw5|w2d24hnz5|vx1rkgyp5|7ub8cfxx5|xb8nn1vh5|75adkaly5|0o2pwwyq5|pdyq0f3p5|4h5vxeh25|nwu5okns5|3uwex8sl5|63k5fftw5|0lp9cw7l5|qspnvlqy5|yp71tr2u5|pvvf0ou35|l4qvqggl5|o53h434j5|kaxqjpm35|6y8k67bn5|kzckpokw5|6u7y69yo5|0p23mntd5|gnb3l73v5|e208u7j75|2npjjvmh5|g2a9grh25|zu2yavjm5|t08h424q5|l9a4tybn5|1syrgkqm5|ll34mh8m5|ae6y2akr5|vrnd2y8n5|tebwrb1h5|4a8xx9qe5|gh8pd3p85|7ou2y2w15|z2298szu5|uo3x8xuh5|scj3ycpv5|et539dn65|aljq73yc5|1bcyy3hm5|sla5726j5|yqkvmg3n5|zjx8nddl5|lxtpkj3l5|'+
+    '834f8tdv6|ssfzmwvk6|48wu3c1m6|ut7wqvo66|nc0trftk6|txzbfxwc6|spjkw8bc6|ntybzo3p6|j66z3c456|yql0k20y6|ee96rzgu6|9szazvv16|refnfteu6|l18xzgsd6|26k0wnfr6|ca3fxaqt6|mwh477kp6|3jzkte1z6|6ckw1kov6|hxx3nfa06|8bdtlxms6|7ubnc7pq6|k335eaxd6|n6n0ksxo6|1dzfue8a6|gsve87un6|th4urgun6|2y4la7436|dw4vety26|ph14ptp16|8j240pwy6|672zu0wk6|p8bjok5u6|m0ud0ze66|autao9z56|flwqjlex6|7p6ln3o66|olhr2ma56|3n7xkgf96|rb4l84bv6|gufcly1e6|szjga5yt6|aq9eokda6|f6fg2aok6|gafpnrdf6|stdu8fuc6|1chgjjox6|t2q7n8jq6|jkw2euyz6|sksmmtpn6|';
+
+    // define formatting for inactive button used in instructions
+    var inactive_btn = '.inactive-btn {display: inline-block; padding: 6px 12px; margin: 0px; font-size: 14px; font-weight: 400; font-family: "Open Sans", "Arial", sans-serif; cursor: pointer; line-height: 1.4; text-align: center; white-space: nowrap; vertical-align: middle; background-image: none; border: 1px solid transparent; border-radius: 4px; color: #333; background-color: #fff; border-color: #ccc; pointer-events: none;}';
+
+    // define running order for stimuli
+    var rlist1 = rshuffle(rcrit2, rfill);
+    var rlist2 = rshuffle(rcrit3, rfill);
+    var rlist3 = rshuffle(rcrit4, rfill);
+    var rlist4 = rshuffle(rcrit5, rfill);
+    var rlist5 = rshuffle(rcrit6, rfill);
+    var rlist6 = rshuffle(rcrit1, rfill);
+
+    // participant identifier
+
+    var identifier = {
+        type: 'survey-html-form',
+        data: {trial_name: 'identifier'},
+        button_label: '계속',
+        html: '<img src="https://image.freepik.com/free-vector/access-control-system-abstract-concept_335657-3180.jpg" height="150" title="image credit: pch.vector / Freepik (www.freepik.com)"><br>'+
+            '<span style="font-size:125%;"><b>참가ID</b></span><p>연구자에게 배정받은 참가ID를 입력하여 주십시오</p><p><input name="digits" type="text" pattern="'+password+'" required></p>',
+        on_load: function() {
+            document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+        },
+        on_finish: function(data){
+            var dat = JSON.parse(jsPsych.data.get().last(1).select('responses').values);
+            var get_digits = dat["digits"];
+            console.log('identifier: ', get_digits);
+            jsPsych.data.addProperties({participant: get_digits});
+            var num = get_digits.slice(-1); // get last character of id
+            if (num == 2) { // set running list based on last character of id
+                CONDITION = 2
+            } else if (num == 3) {
+                CONDITION = 3
+            } else if (num == 4) {
+                CONDITION = 4
+            } else if (num == 5) {
+                CONDITION = 5
+            } else if (num == 6) {
+                CONDITION = 6
+            } else if (num == 'r') {
+                CONDITION = 0
+            }
+            jsPsych.data.addProperties({running_list: CONDITION}); // add running list to data
+            console.log('last character: ', num);
+            console.log('running list: ', CONDITION);
+        }
+    };
+    timeline.push(identifier);
+
+    // english acceptability judgment task
+
+    var ajt_instructions = {
+        type: 'survey-html-form',
+        data: {trial_name: 'ajt_instructions'},
+        button_label: '계속',
+        html:
+            '<style>p {text-align:left;} .section {padding:.5em;} table {border-collapse: collapse;} .row {border:3px solid #c6c6c6;box-shadow:2px 2px 5px #999; padding:.5em;} td {text-align:left;}'+inactive_btn+' .center {display: flex; justify-content: center; align-items: center;}</style>'+
+            '<img src="https://image.freepik.com/free-vector/happy-man-holding-five-golden-stars-customer-review-social-media-flat-illustration_74855-14060.jpg" height="150" title="image credit: pch.vector / Freepik (www.freepik.com)"><br>'+
+            '<span style="font-size:125%; font-weight:bold;">세번째 과제: 영어 문장 평가</span>'+
+            '<p style="text-align:center;">실험에 대한 설명을 모두 읽고 이해하신다면 각 설명 앞에 위치한 박스를 클릭하여 주시기 바랍니다.</p>'+
+            '<table><tr class="row"><td style="background-color:#c6c6c6;"><input type="checkbox" name="instructions1" value="agree" required></td>'+
+            '<td><div class="section">'+
+            '<p>언어 사용자는 정확하게 이유를 설명할 수 없어도 어느 문장이 해당 언어에서 허용 가능한지 불가능한지를 아는 직관적인 감각을 갖고 있습니다. 예를 들어, 대부분의 영어사용자들은 첫번재 문장은 가능하지만 두번째 문장은 불가능하다는 것을 알고 있습니다.</p>'+
+            '<p>허용 가능한 문장: <span style="background-color:lightgreen">\"Mary thinks that John is likely to pass the test even if he doesn\'t study this weekend.\"</span></p>'+
+            '<p>허용 불가능한 문장: <span style="background-color:lightpink">\"Mary thinks that John is probable to pass the test even if he doesn\'t study this weekend.\"</span></p>'+
+            '</div></td></tr>'+
+            '<tr class="spacer" height="20"><td></td></tr>'+
+            '<tr class="row"><td style="background-color:#c6c6c6;"><input type="checkbox" name="instructions2" value="agree" required></td>'+
+            '<td><div class="section">'+
+            '<p>이번 실험과제에서는, 영어로 된 문장을 읽고 1이 \"완전 허용 불가능\"이고 6이 \"완전 허용 가능\"인 아래의 척도를 사용하여 평가할 것입니다:</p>'+
+            '<div style="width:75%; margin:auto; border:2px; border-style:ridge; padding:2px;"><p style="text-align:center; font-size:1.1em;">I think John is likely to pass the test even if he doesn\'t study this weekend.</p><p style="text-align:center;"><i>완전 허용 불가능</i>&nbsp;&nbsp;<button class="inactive-btn">1</button>&nbsp;&nbsp;<button class="inactive-btn">2</button>&nbsp;&nbsp;<button class="inactive-btn">3</button>&nbsp;&nbsp;<button class="inactive-btn">4</button>&nbsp;&nbsp;<button class="inactive-btn">5</button>&nbsp;&nbsp;<button class="inactive-btn">6</button>&nbsp;&nbsp;<i>완전 허용 가능</i></p><p style="text-align:center;">만약 문장을 평가하기 어려우시다면 키보드의 0을 눌러주십시오.</p></div>'+
+            '<p>문장을 평가할 때, \"이 문장이 원어민이 실제 의도적으로 사용할 것 같은 문장인지\" 고려하여 주시기 바랍니다.</p>'+
+            '</div></td></tr>'+
+            '<tr class="spacer" height="20"><td></td></tr>'+
+            '<tr class="row"><td style="background-color:#c6c6c6;"><input type="checkbox" name="instructions3" value="agree" required></td>'+
+            '<td><div class="section">'+
+            '<p>문장을 평가할 수 없는 경우가 생길 수 있습니다. 예를 들어, 모르는 단어가 포함되어 있다면 문장을 평가하기 어려울 수 있습니다. 그런 경우, 문장을 평가하지 않고 키보드의 숫자 0을 눌러주십시오. 하지만, 대부분의 참가자들이 그런 경우가 없거나 매우 적을 것이라고 생각됩니다.</p>'+
+            '</div></td></tr>'+
+            '</table>'+
+            '<p style="text-align:center;">이 과제는 약 15분 정도 소요될 예정이며, 과제 수행 시 최대한 집중하여 주시기 바랍니다.</p>',
+    };
+
+    var ajt_prac_alert = {
+        type: 'html-button-response',
+        stimulus: '<p>지금은 과제 수행 방식을 하기 위해 몇 개의 문제를 연습할 것입니다.</p>'+
+            '<ul style="text-align:left;">'+
+            '<li>각 연습 문제는 수용성 (문장이 원어민에게 얼마나 잘 받아들여지는지, 거부감은 없는지에 대한 판단) 이 높거나 낮게 설계되어 있습니다.</li>'+
+            '<li>각 문장을 평가할 때 높은 수용성의 경우 4, 5, 6점을 낮은 수용성의 경우 1, 2, 3점을 주시기 바랍니다.</li>'+
+            '<li>만약 선택하신 답변이 틀렸다면 오답이라는 안내를 받게 됩니다.</li>',
+        choices: ['계속'],
+    };
+
+    var ajt_prac_trial = {
+        type: 'acceptability-judgment',
+        stimulus: jsPsych.timelineVariable('sent'),
+        styling: 'font-size:1.1em',
+        choices: ['1', '2', '3', '4', '5', '6'],
+        leftComment: '<i>완전 허용 불가능</i>',
+        rightComment: '<i>완전 허용 가능</i>',
+        prompt: '<p>만약 문장을 평가하기 어려우시다면 키보드의 0을 눌러주십시오.</p>',
+        keypress: 48,
+        data: {
+            type: jsPsych.timelineVariable('type'),
+            item: jsPsych.timelineVariable('item'),
+            cond: jsPsych.timelineVariable('cond'),
+            trial_name: 'ajt_practice',
+            trial_part:'ajt_prac_trial',
+        },
+        on_finish: function(data) {
+            var acc = false;
+            if (data.cond == 'gram' && data.button_pressed > 2) {
+                acc = true;
+            } else if (data.cond == 'ungr' && data.button_pressed < 3) {
+                acc = true;
+            }
+            data.accuracy = acc;
+        }
+    };
+
+    var ajt_prac_feedback_correct = {
+        type: 'html-keyboard-response',
+        stimulus: '',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 500,
+    };
+
+    var ajt_prac_feedback_conditional_correct = {
+        timeline: [ajt_prac_feedback_correct],
+        conditional_function: function() {
+            var last_resp_acc = jsPsych.data.getLastTrialData().values()[0].accuracy;
+            console.log('last_resp_acc: ', last_resp_acc);
+            if (last_resp_acc == true) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ajt_prac_feedback_incorrect = {
+        type: 'html-keyboard-response',
+        stimulus: '<span style="color:red;font-size:30px;">오답입니다. 더욱 주의깊게 읽어주시기 바랍니다.</span>',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 3000,
+    };
+
+    var ajt_prac_feedback_conditional_incorrect = {
+        timeline: [ajt_prac_feedback_incorrect],
+        conditional_function: function() {
+            var last_resp_acc = jsPsych.data.getLastTrialData().values()[0].accuracy;
+            if (last_resp_acc == false) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ajt_prac_procedure = {
+        timeline: [ajt_prac_trial, ajt_prac_feedback_conditional_correct, ajt_prac_feedback_conditional_incorrect],
+        timeline_variables: eng_ajt_prac_list,
+        randomize_order: true,
+    };
+
+    var repeat_instructions_message = {
+        type: 'html-button-response',
+        stimulus: '<p>오답이 많아 다음 단계로 넘어갈 수 없습니다.</p>'+
+        '<p>과제 설명을 다시 읽고 연습 문제에 다시 답변하여 주시기 바랍니다.</p>',
+        choices: ['계속'],
+    };
+
+    var repeat_instructions_conditional = {
+        timeline: [repeat_instructions_message],
+        conditional_function: function() {
+            var last_prac_trials = jsPsych.data.get().filter({trial_part:'ajt_prac_trial'}).last(eng_ajt_prac_list.length);
+            var n_correct = last_prac_trials.filter({accuracy: true}).count();
+            var prop_corr = n_correct/eng_ajt_prac_list.length;
+            if (prop_corr < 1) {
+                repeat_prac = true;
+                return true;
+            } else {
+                repeat_prac = false;
+                return false;
+            }
+        }
+    };
+
+    var instructions_prac_loop = {
+        timeline: [ajt_instructions, ajt_prac_alert, ajt_prac_procedure, repeat_instructions_conditional],
+        loop_function: function() {
+            if (repeat_prac == true) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        on_load: function() {
+            document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+        }
+    };
+    timeline.push(instructions_prac_loop);
+
+    var start_task = {
+        type: 'fullscreen',
+        fullscreen_mode: true,
+        message: '<p>수고하셨습니다! 이제 실제 과제로 넘어갈 것입니다.</p><p>실제 과제에서는 정답여부는 나타나지 않습니다. ‘계속’ 버튼을 눌러 전체화면으로 이동 후 시작하여 주십시오.</p>',
+        button_label: '계속',
+        on_finish: function() {
+        document.getElementById("jspsych-progressbar-container").style.visibility = "visible";
+        }
+    };
+    timeline.push(start_task);
+
+    var count = 0; // number of trials completed, for updated progress bar
+    var n_trials = 70; // number of trials in task, for updating progress bar
+
+    var ajt_trial = {
+        type: 'acceptability-judgment',
+        stimulus: function(){return jsPsych.timelineVariable('eng', true)+jsPsych.timelineVariable('time', true)},
+        styling: 'font-size:1.1em',
+        choices: ['1', '2', '3', '4', '5', '6'],
+        leftComment: '<i>완전 허용 불가능</i>',
+        rightComment: '<i>완전 허용 가능</i>',
+        prompt: '<p>만약 문장을 평가하기 어려우시다면 키보드의 0을 눌러주십시오.</p>',
+        keypress: 48,
+        post_trial_gap: 500,
+        data: {
+            type: jsPsych.timelineVariable('type'),
+            item: jsPsych.timelineVariable('item'),
+            cond: jsPsych.timelineVariable('cond'),
+            task: 'english-acceptability-judgment-task',
+            trial_name: 'ajt_task',
+            trial_part: 'ajt_trial',
+        },
+        on_finish: function(data) {
+            var acc = false;
+            if ((data.cond == 'gram' || data.cond == 'cond1' || data.cond == 'cond2') && data.button_pressed > 2) {
+                acc = true;
+            } else if ((data.cond == 'ungr' || data.cond == 'cond3' || data.cond == 'cond4' || data.cond == 'cond5' || data.cond == 'cond6') && data.button_pressed < 3) {
+                acc = true;
+            }
+            data.accuracy = acc;
+            count++;
+            var progress = count/n_trials;
+            jsPsych.setProgressBar(progress);
+        },
+    };
+
+    var ajt_feedback_rushing = {
+        type: 'html-keyboard-response',
+        stimulus: '<span style="color:red;font-size:30px;">속도가 지나치게 빠릅니다. 문장을 더욱 주의 깊게 읽어주시기 바랍니다.</span>',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 3000,
+    };
+
+    var ajt_feedback_rushing_conditional = {
+        timeline: [ajt_feedback_rushing],
+        conditional_function: function() {
+            var last_resp_rt = jsPsych.data.getLastTrialData().values()[0].rt;
+            if (last_resp_rt < 2000) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ajt_variables_list1 = {
+        timeline: [ajt_trial, ajt_feedback_rushing_conditional],
+        timeline_variables: rlist1,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ajt_variables_list2 = {
+        timeline: [ajt_trial, ajt_feedback_rushing_conditional],
+        timeline_variables: rlist2,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 2) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ajt_variables_list3 = {
+        timeline: [ajt_trial, ajt_feedback_rushing_conditional],
+        timeline_variables: rlist3,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 3) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ajt_variables_list4 = {
+        timeline: [ajt_trial, ajt_feedback_rushing_conditional],
+        timeline_variables: rlist4,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 4) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ajt_variables_list5 = {
+        timeline: [ajt_trial, ajt_feedback_rushing_conditional],
+        timeline_variables: rlist5,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 5) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ajt_variables_list6 = {
+        timeline: [ajt_trial, ajt_feedback_rushing_conditional],
+        timeline_variables: rlist6,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 6) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ajt_variables_list0 = {
+        timeline: [ajt_trial, ajt_feedback_rushing_conditional],
+        timeline_variables: rlist0,
+        randomize_order: false,
+        conditional_function: function() {
+            if (CONDITION == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    var ajt_main_procedure = {
+        timeline: [ajt_variables_list1, ajt_variables_list2, ajt_variables_list3, ajt_variables_list4, ajt_variables_list5, ajt_variables_list6, ajt_variables_list0]
+    };
+    timeline.push(ajt_main_procedure);
+
+    // blank trial that ends the experiment and takes the participant to the end message
+
+    var end_task = {
+        type: 'fullscreen',
+        fullscreen_mode: false,
+        on_load: function() {
+            document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+        },
+        on_finish: function(){
+            jsPsych.endExperiment(end_message);
+        }
+    };
+    timeline.push(end_task);
+
+    // end message
+
+    var end_message = 
+        '<img src="https://image.freepik.com/free-vector/men-success-laptop-relieve-work-from-home-computer-great_10045-646.jpg" height="150" title="image credit: syarifahbrit / Freepik (www.freepik.com)"><br>'+
+        '<span style="font-size:125%; font-weight:bold;">수고하셨습니다!</span>'+
+        '<p>실험의 다섯 과제 중 세번째 과제를 완료하였습니다. 아래 링크를 눌러 다음 과제로 이동하여 주십시오.</p>'+
+        '<p style="text-align:center;"><a href="https://nb516dlzrh.cognition.run">https://nb516dlzrh.cognition.run</a></p>' +
+        '<p>다음 과제를 바로 시작하시거나 링크를 저장하여 나중에 하실 수 있으며, 본 실험은 7일 이내에 완료하여 주시기 바랍니다.</p>'
+
+    // initiate experiment
+
+    jsPsych.init({
+        timeline: timeline,
+        show_preload_progress_bar: true,
+        show_progress_bar: true,
+        message_progress_bar: '진행 상황',
+        auto_update_progress_bar: false,
+        //on_finish: function(){jsPsych.data.displayData();}
+    });
+
+</script>
+</html>
